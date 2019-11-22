@@ -100,12 +100,6 @@ let stringBase = "digraph finite_state_machine {
 
 let stringArc idO idD lab = "    LR_"^string_of_int(idO)^" -> LR_"^string_of_int(idD)^" [ label = \""^lab^"\" ];\n";;
 
-(* LR_0 -> LR_2 [ label = "SS(B)" ];
-   LR_0 -> LR_1 [ label = "SS(S)" ];
-   LR_1 -> LR_3 [ label = "S($end)" ];
-   LR_2 -> LR_6 [ label = "SS(b)" ];
-   LR_2 -> LR_5 [ label = "SS(a)" ]; *)
-
 let printId id = Printf.printf "ID :%d\n%!" id
 
 

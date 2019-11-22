@@ -26,12 +26,13 @@ let () =
   (* Open file *)
   let graph = from_file infile in
 
-  let b = findpath graph _source _sink in 
+  let b = flotMax graph _source _sink in
 
-  Printf.printf "%B %!" b ; 
+  export b "./graph_test";
 
   (* Rewrite the graph that has been read. *)
   let () = write_file outfile graph in
+
 
   ()
 
