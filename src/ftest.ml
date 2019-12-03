@@ -26,12 +26,12 @@ let () =
   (* Open file *)
   let graph = from_file infile in
 
-  let b = flotMax graph _source _sink in
+  let b = algorithm_FordFulkerson graph _source _sink in
 
-  export b "./graph_test";
+  export b outfile;
 
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile graph in
+  let () = write_file infile graph in
 
 
   ()
