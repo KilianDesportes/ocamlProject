@@ -22,6 +22,10 @@ let rec printChemin acu = function
   | [] -> Printf.printf "%s\n%!" acu
   | x :: rest -> printChemin ((string_of_int x)^" "^acu) rest
 
+let rec inList elem = function
+  | [] -> false
+  | x :: rest -> if x == elem then true else inList elem rest
+
 let rec getPath gr id1 id2 =
   let rec parcourProfond acuV = function
     | [] -> []
@@ -29,8 +33,8 @@ let rec getPath gr id1 id2 =
       else 
         let rec addOutArcPV acu = function
           | [] -> acu
-          | (a,y) :: rest -> 
-            if y == 0 
+          | (a,y) :: rest ->
+            if y == 0 || (inList a acuV)
             then addOutArcPV acu rest
             else addOutArcPV ((a::x::chemin_to_x)::acu) rest
         in
@@ -49,19 +53,21 @@ let rec modif_arcs gr value = function
   | x :: [] -> gr
   | x :: y :: rest -> modif_arcs (add_arc gr x y value) value (y::rest)
 
+
 let rec flow_val gr acu = function
   | [] -> acu
   | x :: [] -> acu 
   | x :: y :: rest -> let diff = (Option.get (find_arc gr x y)) - 
-                                 (Option.get (find_arc gr y x)) 
+                                 0 
     in
     if diff < acu 
     then flow_val gr diff (y::rest)
     else flow_val gr acu (y::rest)
 
 
+
 let rec flotMax gr id1 id2 = 
-  let grB =  gmap gr int_of_string in
+  let grB = gmap gr int_of_string in
   let gr = gmap gr int_of_string in
   let gr = init_zero gr in
   let chemin = getPath grB id1 id2 in
@@ -69,9 +75,10 @@ let rec flotMax gr id1 id2 =
     | [] -> gr
     | x :: [] -> gr
     | l -> 
-      let value_flow = flow_val gr max_int (List.rev l) in
-      let grB = modif_arcs grB ((-) 0 value_flow) (List.rev l) in
-      let gr = modif_arcs gr value_flow l in 
+      let value_flow = flow_val grB max_int (List.rev l) in
+      let grB = modif_arcs grB ((-) 0 value_flow) (List.rev l) in 
+      let gr = modif_arcs gr ((-) 0 value_flow) (List.rev l) in 
+      let gr = modif_arcs gr value_flow l in
       let pat = getPath grB id1 id2 in
       loop_chemin gr grB pat
   in
